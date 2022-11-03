@@ -104,7 +104,7 @@ function HomePage() {
                 />
                 <Button variant="primary" className='mt-2' type="submit">Add To List</Button>
             </form>
-            <div className="container d-flex flex-wrap gap-3 justify-content-center align-items-center">
+            <div className="container d-flex flex-wrap gap-3 justify-content-center align-items-start">
                 {
                     list.length > 0
                         ?
