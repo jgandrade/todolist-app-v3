@@ -7,7 +7,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useRefreshToken from "./hooks/useRefreshToken";
-import CheckAuth from './components/CheckAuth';
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
 
@@ -29,13 +29,12 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" style={{ height: "100vh" }}>
       <Suspense fallback={loader}>
         <Routes>
           {/* PUBLIC ROUTES */}
-          <Route element={<CheckAuth />}>
-            <Route element={<LoginPage />} path="/" />
-          </Route>
+          <Route element={<LoginPage />} path="/" />
+          <Route element={<RegisterPage />} path="/register" />
           {/* PRIVATE ROUTES */}
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<HomePage />} />
