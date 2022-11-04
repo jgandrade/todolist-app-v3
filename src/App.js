@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import MissingPage from "./pages/MissingPage";
@@ -12,17 +12,12 @@ import RegisterPage from './pages/RegisterPage';
 import Footer from './components/Footer';
 import useAuth from './hooks/useAuth';
 import Swal from 'sweetalert2';
+import { SettingsProvider } from './context/SettingsProvider';
+import { FadeLoader } from "react-spinners";
 
 function App() {
   const { setAuth } = useAuth();
-  const loader = (
-    <div
-      className="position-fixed w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-light"
-      style={{ zIndex: 9999 }}
-    >
-      <h2 className="text-accent fw-bold mt-3">Please wait...</h2>
-    </div>
-  );
+  const [loading, setLoading] = useState(false);
 
   const refresh = useRefreshToken();
 
@@ -45,10 +40,16 @@ function App() {
 
   return (
     <div className="App">
-      <Suspense fallback={loader}>
+      <SettingsProvider value={{ loading, setLoading }}>
+        <div className="position-absolute bottom-50 end-50">
+          <FadeLoader
+            color={"#dee333"}
+            loading={loading}
+            size={100}
+          />
+        </div>
         <Routes>
           {/* PUBLIC ROUTES */}
-
           <Route element={<PublicRoute />}>
             <Route exact element={<LoginPage />} path="/" />
             <Route exact element={<RegisterPage />} path="/register" />
@@ -61,8 +62,8 @@ function App() {
 
           <Route path="*" element={<MissingPage />} />
         </Routes>
-      </Suspense>
-      <Footer />
+        <Footer />
+      </SettingsProvider>
     </div>
   );
 }

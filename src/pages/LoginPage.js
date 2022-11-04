@@ -1,3 +1,4 @@
+import { useState, useContext } from "react";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from '../api/axios'
@@ -9,8 +10,10 @@ import useAuth from '../hooks/useAuth';
 import usePlay from '../hooks/usePlay';
 import heroImage from '../assets/herobanner.svg';
 import { JournalCheck } from 'react-bootstrap-icons';
+import SettingsContext from "../context/SettingsProvider";
 
 function LoginPage() {
+  const { setLoading } = useContext(SettingsContext);
   const playError = usePlay("error");
   const playSuccess = usePlay("success");
   const { setAuth } = useAuth();
@@ -32,7 +35,9 @@ function LoginPage() {
         .strict(true)
     }),
     onSubmit: async function (values, { resetForm }) {
+      setLoading(true);
       const response = await axios.post("/login", values, { withCredentials: true });
+      setLoading(false);
       const { accessToken, auth } = response.data;
       if (response.data.response === true) {
         toast.success('Successfully Logged In!', {
@@ -40,7 +45,7 @@ function LoginPage() {
           autoClose: 1000,
           hideProgressBar: false,
         });
-        
+
         resetForm({ values: '' });
         playSuccess();
         return setTimeout(() => {
@@ -48,7 +53,6 @@ function LoginPage() {
           navigate("/home")
         }, 2000);
       } else {
-        console.log(response.data);
         playError();
         return toast.error('There was an error see errors below form.', {
           position: "top-right",

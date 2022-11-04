@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useFormik } from 'formik';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,8 +11,10 @@ import useAuth from '../hooks/useAuth';
 import usePlay from '../hooks/usePlay';
 import { BoxArrowRight, JournalCheck, PersonCircle } from 'react-bootstrap-icons';
 import Swal from 'sweetalert2';
+import SettingsContext from '../context/SettingsProvider';
 
 function HomePage() {
+    const { setLoading } = useContext(SettingsContext);
     const [list, setLists] = useState([]);
     const navigate = useNavigate();
     const refresh = useRefreshToken();
@@ -26,16 +28,18 @@ function HomePage() {
         },
         onSubmit: async function (values, { resetForm }) {
             if (values.listName !== null && values.listName.trim() !== "") {
+                setLoading(true);
                 const response = await axios.post("/addList",
                     values,
                     {
                         headers: { Authorization: `Bearer ${auth.accessToken}` }
                     }
                 )
-
+                setLoading(false);
                 if (response.data.auth === "Invalid token") {
+                    setLoading(true);
                     const accessToken = await refresh();
-
+                    setLoading(false);
                     if (accessToken === "expired") {
                         Swal.fire({
                             icon: 'error',
@@ -83,7 +87,9 @@ function HomePage() {
 
     useEffect(() => {
         (async () => {
+            setLoading(true);
             const response = await axios.get("/getLists", { headers: { Authorization: `Bearer ${auth.accessToken}` } });
+            setLoading(false);
             setLists(response.data.lists);
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
