@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { TextInput, PasswordInput } from '@mantine/core';
 import Button from 'react-bootstrap/Button';
 import useAuth from '../hooks/useAuth';
+import useSound from 'use-sound';
 
 function LoginPage() {
+  const playError = useSound("error");
   const { setAuth } = useAuth();
-
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -17,7 +18,12 @@ function LoginPage() {
       password: ""
     },
     validationSchema: Yup.object({
-      userName: Yup.string().max(15, "Must be 15 characters or less").required("Required")
+      userName: Yup.string()
+        .max(25, "Must be 25 characters or less")
+        .min(6, "Must be 6 characters or more")
+        .required("Required"),
+      password: Yup.string()
+        .required("Required")
     }),
     onSubmit: async function (values, { resetForm }) {
       const response = await axios.post("/login", values, { withCredentials: true });
@@ -28,11 +34,15 @@ function LoginPage() {
           autoClose: 1000,
           hideProgressBar: false,
         });
-        setAuth({ auth, accessToken });
+
         resetForm({ values: '' });
-        setTimeout(() => navigate("/home"), 2000);
+        setTimeout(() => {
+          setAuth({ auth, accessToken });
+          navigate("/")
+        }, 2000);
 
       } else {
+        playError();
         toast.error('There was an error see errors below form.', {
           position: "top-right",
           autoClose: 3000,
@@ -61,7 +71,7 @@ function LoginPage() {
           onChange={formik.handleChange}
           value={formik.values.userName}
         />
-        {formik.touched.userName && formik.errors.userName ? <p>{formik.errors.userName}</p> : <></>}
+        {formik.touched.userName && formik.errors.userName ? <li className='text-danger'>{formik.errors.userName}</li> : <></>}
         <PasswordInput
           name="password"
           label="Password"
@@ -70,7 +80,9 @@ function LoginPage() {
           mt="md"
           value={formik.values.password}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
         />
+        {formik.touched.password && formik.errors.password ? <li className='text-danger'>{formik.errors.password}</li> : <></>}
         <Button type='submit' className='mt-3' variant="outline-primary">Login</Button>{' '}
       </form>
     </div>

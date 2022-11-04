@@ -3,7 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import MissingPage from "./pages/MissingPage";
 import RequireAuth from "./components/RequireAuth";
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useRefreshToken from "./hooks/useRefreshToken";
@@ -34,7 +34,7 @@ function App() {
         <Routes>
           {/* PUBLIC ROUTES */}
           <Route element={<CheckAuth />}>
-            <Route element={<LoginPage />} path="/login" />
+            <Route element={<LoginPage />} path="/" />
           </Route>
           {/* PRIVATE ROUTES */}
           <Route element={<RequireAuth />}>
