@@ -60,14 +60,14 @@ function LoginPage() {
 
   return (
     <div className='d-flex container text-center justify-content-center align-items-center' style={{ height: "100vh" }}>
+      <ToastContainer
+        position="top-right"
+        hideProgressBar={false}
+        newestOnTop={true}
+        rtl={false}
+        theme="light"
+      />
       <div id="login-page" className='container col-md-5 text-center p-5 shadow h-75 border rounded d-flex flex-column justify-content-center'>
-        <ToastContainer
-          position="top-right"
-          hideProgressBar={false}
-          newestOnTop={true}
-          rtl={false}
-          theme="light"
-        />
         <h2 className='fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h2>
         <h4 className='fw-bold my-3'>Login</h4>
 
@@ -80,7 +80,7 @@ function LoginPage() {
             onChange={formik.handleChange}
             value={formik.values.userName}
           />
-          {formik.touched.userName && formik.errors.userName ? <li className='text-danger'>{formik.errors.userName}</li> : <></>}
+          {formik.touched.userName && formik.errors.userName ? <p className='text-danger' style={{ fontSize: "0.8em" }}>{formik.errors.userName}</p> : <></>}
           <PasswordInput
             name="password"
             label="Password"
@@ -91,7 +91,7 @@ function LoginPage() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.touched.password && formik.errors.password ? <li className='text-danger'>{formik.errors.password}</li> : <></>}
+          {formik.touched.password && formik.errors.password ? <p className='text-danger' style={{ fontSize: "0.8em" }}>{formik.errors.password}</p> : <></>}
           <Button type='submit' className='mt-3 fw-bold px-4' variant="outline-dark">Login</Button>{' '}
         </form>
       </div>
