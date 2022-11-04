@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Card from 'react-bootstrap/Card';
 import { TextInput } from '@mantine/core';
 import Button from 'react-bootstrap/Button';
@@ -164,6 +164,7 @@ function ListCard(props) {
                         if (!e.isCompleted) {
                             return <ListTask key={i} {...e} index={i} listIndex={props.index} listName={props.listName} setTaskList={setTaskList} />
                         }
+                        return false
                     })
                 }
                 return <p className="text-secondary text-center mt-3">No pending task yet</p>
@@ -174,6 +175,7 @@ function ListCard(props) {
                         if (e.isCompleted) {
                             return <ListTask key={i} {...e} index={i} listIndex={props.index} listName={props.listName} setTaskList={setTaskList} />
                         }
+                        return false
                     })
                 }
                 return <p className="text-secondary text-center mt-3">No completed task yet</p>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useFormik } from 'formik';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
@@ -19,12 +19,10 @@ function HomePage() {
     const { auth, setAuth } = useAuth();
     const playSuccess = usePlay("success");
     const playError = usePlay("error");
-
-    const getList = async () => {
+    const fetchList = useCallback(async () => {
         const response = await axios.get("/getLists", { headers: { Authorization: `Bearer ${auth.accessToken}` } });
         setLists(response.data.lists);
-        return response.data.lists;
-    }
+    }, [auth.accessToken]);
 
     const formik = useFormik({
         initialValues: {
@@ -88,10 +86,8 @@ function HomePage() {
     );
 
     useEffect(() => {
-        (async () => {
-            await getList();
-        })();
-    }, []);
+        fetchList();
+    }, [fetchList]);
 
     async function logout() {
         await axios.get("/logout", { withCredentials: true });
@@ -119,14 +115,14 @@ function HomePage() {
                 rtl={false}
                 theme="light"
             />
-            <div className="d-flex flex-column flex-md-row">
-                <div className='col-md-3 container '>
+            <div className="d-flex flex-column flex-md-row" style={{ height: "100%" }}>
+                <div className='col-md-3 container' style={{ height: "80vh" }}>
                     <div className='d-flex justify-content-between align-items-center'>
                         <h3 className='mt-3 fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h3>
                         <Button variant="danger" className='fw-bold mt-2 px-1 text-light' onClick={logout}><BoxArrowRight /> Logout</Button>
                     </div>
                     <div className="mt-5">
-                        <h6><PersonCircle /> Welcome {auth.auth.userName}!</h6>
+                        <h6><PersonCircle /> Welcome {auth.auth.fullName}!</h6>
                         <form onSubmit={formik.handleSubmit} className="mt-3" >
                             <p className='fw-bold'>Add List:</p>
                             <TextInput

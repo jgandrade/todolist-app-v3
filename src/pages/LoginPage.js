@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from '../api/axios'
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TextInput, PasswordInput } from '@mantine/core';
 import Button from 'react-bootstrap/Button';
 import useAuth from '../hooks/useAuth';
@@ -17,11 +17,11 @@ function LoginPage() {
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
-      userName: "",
+      input: "",
       password: ""
     },
     validationSchema: Yup.object({
-      userName: Yup.string()
+      input: Yup.string()
         .max(25, "Must be 25 characters or less")
         .min(6, "Must be 6 characters or more")
         .trim('Input cannot include leading and trailing spaces')
@@ -67,20 +67,21 @@ function LoginPage() {
         rtl={false}
         theme="light"
       />
-      <div id="login-page" className='container col-md-5 text-center p-5 shadow h-75 border rounded d-flex flex-column justify-content-center'>
+      <div id="login-page" className='container col-md-5 text-center p-5 shadow h-80 border rounded d-flex flex-column justify-content-center'>
         <h2 className='fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h2>
         <h4 className='fw-bold my-3'>Login</h4>
 
         <form onSubmit={formik.handleSubmit}>
           <TextInput
-            label="Username"
-            placeholder="Your username"
-            name="userName" type="text"
+            label="Username/Email"
+            placeholder="Your username or Email"
+            name="input" type="text"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
-            value={formik.values.userName}
+            value={formik.values.input}
+            required
           />
-          {formik.touched.userName && formik.errors.userName ? <p className='text-danger' style={{ fontSize: "0.8em" }}>{formik.errors.userName}</p> : <></>}
+          {formik.touched.input && formik.errors.input ? <p className='text-danger' style={{ fontSize: "0.8em" }}>{formik.errors.input}</p> : <></>}
           <PasswordInput
             name="password"
             label="Password"
@@ -92,7 +93,11 @@ function LoginPage() {
             onBlur={formik.handleBlur}
           />
           {formik.touched.password && formik.errors.password ? <p className='text-danger' style={{ fontSize: "0.8em" }}>{formik.errors.password}</p> : <></>}
-          <Button type='submit' className='mt-3 fw-bold px-4' variant="outline-dark">Login</Button>{' '}
+          <Button type='submit' className='mt-3 fw-bold px-4' variant="outline-dark">Login</Button>
+          <div className="mt-5">
+            <p className='text-secondary' style={{ fontSize: "0.8em" }}>No Acccount Yet?</p>
+            <Link to="/register" style={{ fontSize: "0.8em" }}>Click here to Register</Link>
+          </div>
         </form>
       </div>
       <div className='col-md-7 d-none d-md-block flex-column align-content-center text-center'>
