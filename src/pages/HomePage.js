@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useFormik } from 'formik';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
@@ -19,10 +19,6 @@ function HomePage() {
     const { auth, setAuth } = useAuth();
     const playSuccess = usePlay("success");
     const playError = usePlay("error");
-    const fetchList = useCallback(async () => {
-        const response = await axios.get("/getLists", { headers: { Authorization: `Bearer ${auth.accessToken}` } });
-        setLists(response.data.lists);
-    }, [auth.accessToken]);
 
     const formik = useFormik({
         initialValues: {
@@ -86,8 +82,12 @@ function HomePage() {
     );
 
     useEffect(() => {
-        fetchList();
-    }, [fetchList]);
+        (async () => {
+            const response = await axios.get("/getLists", { headers: { Authorization: `Bearer ${auth.accessToken}` } });
+            setLists(response.data.lists);
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     async function logout() {
         await axios.get("/logout", { withCredentials: true });

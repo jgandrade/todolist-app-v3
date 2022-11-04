@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useCallback } from 'react';
+import { Suspense, useEffect } from 'react';
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import MissingPage from "./pages/MissingPage";
@@ -14,20 +14,7 @@ import useAuth from './hooks/useAuth';
 import Swal from 'sweetalert2';
 
 function App() {
-  const refresh = useRefreshToken();
   const { setAuth } = useAuth();
-  const fetchLoggedIn = useCallback(async () => {
-    const isLoggedIn = await refresh();
-    if (isLoggedIn === "expired") {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Your session has expired!',
-        footer: 'You are directed here in the login page.'
-      });
-      setAuth({});
-    }
-  }, [setAuth, refresh])
   const loader = (
     <div
       className="position-fixed w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-light"
@@ -37,10 +24,24 @@ function App() {
     </div>
   );
 
+  const refresh = useRefreshToken();
 
   useEffect(() => {
-    fetchLoggedIn();
-  }, [fetchLoggedIn]);
+    (async () => {
+      const isLoggedIn = await refresh();
+      if (isLoggedIn === "expired") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Your session has expired!',
+          footer: 'You are directed here in the login page.'
+        });
+        setAuth({});
+      }
+    })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="App">
