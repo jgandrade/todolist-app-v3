@@ -16,6 +16,7 @@ function HomePage() {
     const refresh = useRefreshToken();
     const { auth, setAuth } = useAuth();
     const playSuccess = usePlay("success");
+    const playError = usePlay("error");
 
     const getList = async () => {
         const response = await axios.get("/getLists", { headers: { Authorization: `Bearer ${auth.accessToken}` } });
@@ -36,34 +37,44 @@ function HomePage() {
             listName: "",
         },
         onSubmit: async function (values, { resetForm }) {
-            const response = await axios.post("/addList",
-                values,
-                {
-                    headers: { Authorization: `Bearer ${auth.accessToken}` }
-                }
-            )
-
-            if (response.data.auth === "Invalid token") {
-                const accessToken = await refresh();
-                const res = await axios.post("/addList",
+            if (values.listName !== null && values.listName.trim() !== "") {
+                const response = await axios.post("/addList",
                     values,
                     {
-                        headers: { Authorization: `Bearer ${accessToken}` }
+                        headers: { Authorization: `Bearer ${auth.accessToken}` }
                     }
                 )
-                setLists(prev => [...prev, res.data.list]);
-            } else {
-                setLists(prev => [...prev, response.data.list]);
+
+                if (response.data.auth === "Invalid token") {
+                    const accessToken = await refresh();
+                    const res = await axios.post("/addList",
+                        values,
+                        {
+                            headers: { Authorization: `Bearer ${accessToken}` }
+                        }
+                    )
+                    setLists(prev => [...prev, res.data.list]);
+                } else {
+                    setLists(prev => [...prev, response.data.list]);
+                }
+
+                toast.success('List Added!', {
+                    position: "top-right",
+                    autoClose: 1000,
+                    hideProgressBar: false,
+                });
+
+                playSuccess();
+                return resetForm({ values: "" });
             }
 
-            toast.success('List Added!', {
+            resetForm({ values: "" });
+            playError();
+            return toast.error('Your input should not be an empty string or only whitespaces.', {
                 position: "top-right",
-                autoClose: 1000,
+                autoClose: 3000,
                 hideProgressBar: false,
             });
-
-            playSuccess();
-            resetForm({ values: "" })
         }
     }
     );

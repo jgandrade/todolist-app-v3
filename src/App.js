@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
-import Navbar from './components/Navbar';
 import MissingPage from "./pages/MissingPage";
 import RequireAuth from "./components/RequireAuth";
 import { Routes, Route } from 'react-router-dom';
@@ -11,6 +10,16 @@ import useRefreshToken from "./hooks/useRefreshToken";
 import CheckAuth from './components/CheckAuth';
 
 function App() {
+
+  const loader = (
+    <div
+      className="position-fixed w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-light"
+      style={{ zIndex: 9999 }}
+    >
+      <h2 className="text-accent fw-bold mt-3">Please wait...</h2>
+    </div>
+  );
+
   const refresh = useRefreshToken();
 
   useEffect(() => {
@@ -21,19 +30,19 @@ function App() {
 
   return (
     <div className="App">
-      <Routes>
-        {/* PUBLIC ROUTES */}
-
-        <Route element={<CheckAuth />}>
-          <Route element={<LoginPage />} path="/" />
-        </Route>
-        {/* PRIVATE ROUTES */}
-        <Route element={<RequireAuth />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/nav" element={<Navbar />} />
-        </Route>
-        <Route path="*" element={<MissingPage />} />
-      </Routes>
+      <Suspense fallback={loader}>
+        <Routes>
+          {/* PUBLIC ROUTES */}
+          <Route element={<CheckAuth />}>
+            <Route element={<LoginPage />} path="/login" />
+          </Route>
+          {/* PRIVATE ROUTES */}
+          <Route element={<RequireAuth />}>
+            <Route path="/home" element={<HomePage />} />
+          </Route>
+          <Route path="*" element={<MissingPage />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 }

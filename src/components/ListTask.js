@@ -62,50 +62,49 @@ function ListTask(props) {
   return (
     <>
       <LayoutGroup>
-        <motion.div className="bg-light rounded mb-2 mt-3 container pt-2 pb-2" layout>
-          <AnimatePresence>
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  scale: 1
-                },
-                visible: {
-                  opacity: 1,
-                  scale: 1,
-                  transition: {
-                    duration: 0.7
-                  }
-                },
-                exit: {
-                  opacity: 0,
-                  scale: 1,
-                  transition: {
-                    duration: 0.7
-                  }
+        <AnimatePresence>
+          <motion.div className="bg-light rounded mb-2 mt-3 container pt-2 pb-2"
+            variants={{
+              hidden: {
+                opacity: 0,
+                scale: 1
+              },
+              visible: {
+                opacity: 1,
+                scale: 1,
+                transition: {
+                  duration: 0.7
                 }
-              }}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              <p style={props.isCompleted ? { textDecoration: "line-through" } : {}}>{props.content}</p>
-              <div className='d-flex justify-content-end gap-1'>
-                {
-                  open
-                    ?
-                    <>
-                      <Button variant="outline-danger" onClick={deleteTask} className='mt-2 rounded-circle py-0 px-1'><XLg className="mb-1"/></Button>
-                      <Button variant={props.isCompleted ? "outline-success" : "outline-secondary"} onClick={setComplete} className='mt-2 rounded-circle py-0 px-1'><Check2Square className="mb-1 h5"/></Button>
-                    </>
-                    :
-                    <></>
+              },
+              exit: {
+                opacity: 0,
+                scale: 2,
+                transition: {
+                  duration: 0.7
                 }
-                <button style={{ border: "none", backgroundColor: "transparent" }} onClick={showOptions}><ThreeDotsVertical /></button>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+              }
+            }}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            layout
+          >
+            <p style={props.isCompleted ? { textDecoration: "line-through" } : {}}>{props.content}</p>
+            <div className='d-flex justify-content-end gap-1'>
+              {
+                open
+                  ?
+                  <>
+                    <Button variant="outline-danger" onClick={deleteTask} className='mt-2 rounded-circle py-0 px-1'><XLg className="mb-1" /></Button>
+                    <Button variant={props.isCompleted ? "outline-success" : "outline-secondary"} onClick={setComplete} className='mt-2 rounded-circle py-0 px-1'><Check2Square className="mb-1 h5" /></Button>
+                  </>
+                  :
+                  <></>
+              }
+              <button style={{ border: "none", backgroundColor: "transparent" }} onClick={showOptions}><ThreeDotsVertical /></button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </LayoutGroup>
     </>
   )

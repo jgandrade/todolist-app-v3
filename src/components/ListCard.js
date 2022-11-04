@@ -19,6 +19,7 @@ function ListCard(props) {
         task: ""
     });
     const playSucess = usePlay("success");
+    const playError = usePlay("error");
     const playDelete = usePlay("delete");
 
     function handleChange(event) {
@@ -33,29 +34,41 @@ function ListCard(props) {
 
     async function handleSubmit(event) {
         event.preventDefault();
-        const response = await axios.post("/addTaskToList", { listIndex: props.index, taskContent: task.task }, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
-        if (response.data.auth === "Invalid token") {
-            const accessToken = await refresh();
-            const res = await axios.post("/addTaskToList",
-                { listName: props.listName, taskContent: task.task },
-                {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                }
-            );
-            setTaskList(prev => [...prev, res.data.task])
-        } else {
-            setTaskList(prev => [...prev, response.data.task])
+        if (task.task !== null && task.task.trim() !== "") {
+            const response = await axios.post("/addTaskToList", { listIndex: props.index, taskContent: task.task }, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
+            if (response.data.auth === "Invalid token") {
+                const accessToken = await refresh();
+                const res = await axios.post("/addTaskToList",
+                    { listName: props.listName, taskContent: task.task },
+                    {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    }
+                );
+                setTaskList(prev => [...prev, res.data.task])
+            } else {
+                setTaskList(prev => [...prev, response.data.task])
+            }
+
+            toast.success('Task Added!', {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+            });
+
+            playSucess();
+            return setTask({
+                task: ""
+            });
         }
 
-        toast.success('Task Added!', {
-            position: "top-right",
-            autoClose: 1000,
-            hideProgressBar: false,
-        });
-
-        playSucess();
         setTask({
             task: ""
+        });
+        playError();
+        return toast.error('Input a task that has a value.', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
         });
     }
 
