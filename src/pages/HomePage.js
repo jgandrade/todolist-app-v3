@@ -96,7 +96,9 @@ function HomePage() {
     }, []);
 
     async function logout() {
+        setLoading(true);
         await axios.get("/logout", { withCredentials: true });
+        setLoading(false);
 
         toast.success('Successfully Logged Out!', {
             position: "top-right",
