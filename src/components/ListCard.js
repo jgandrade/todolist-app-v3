@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import Card from 'react-bootstrap/Card';
 import { TextInput } from '@mantine/core';
 import Button from 'react-bootstrap/Button';
@@ -11,8 +11,10 @@ import { toast } from 'react-toastify';
 import usePlay from '../hooks/usePlay';
 import { Trash3, PlusLg } from 'react-bootstrap-icons';
 import Swal from 'sweetalert2';
+import SettingsContext from '../context/SettingsProvider';
 
 function ListCard(props) {
+    const { setLoading } = useContext(SettingsContext);
     const { auth, setAuth } = useAuth();
     const [taskList, setTaskList] = useState(props.tasks);
     const refresh = useRefreshToken();
@@ -36,9 +38,13 @@ function ListCard(props) {
     async function handleSubmit(event) {
         event.preventDefault();
         if (task.task !== null && task.task.trim() !== "") {
+            setLoading(true);
             const response = await axios.post("/addTaskToList", { listIndex: props.index, taskContent: task.task }, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
+            setLoading(false);
             if (response.data.auth === "Invalid token") {
+                setLoading(true);
                 const accessToken = await refresh();
+                setLoading(false);
                 if (accessToken === "expired") {
                     Swal.fire({
                         icon: 'error',
@@ -51,12 +57,14 @@ function ListCard(props) {
                     }, 3000)
                     return false;
                 }
+                setLoading(true);
                 const res = await axios.post("/addTaskToList",
                     { listName: props.listName, taskContent: task.task },
                     {
                         headers: { Authorization: `Bearer ${accessToken}` }
                     }
                 );
+                setLoading(false);
                 setTaskList(prev => [...prev, res.data.task])
             } else {
                 setTaskList(prev => [...prev, response.data.task])
@@ -86,10 +94,13 @@ function ListCard(props) {
     }
 
     async function deleteList() {
+        setLoading(true);
         const response = await axios.delete('/deleteList', { headers: { Authorization: `Bearer ${auth.accessToken}` }, data: { listIndex: props.index } });
+        setLoading(false);
         if (response.data.auth === "Invalid token") {
-
+            setLoading(true);
             const accessToken = await refresh();
+            setLoading(false);
             if (accessToken === "expired") {
                 Swal.fire({
                     icon: 'error',
@@ -102,8 +113,10 @@ function ListCard(props) {
                 }, 3000)
                 return false;
             }
-
+            
+            setLoading(true);
             const res = await axios.delete('/deleteList', { headers: { Authorization: `Bearer ${accessToken}` }, data: { listIndex: props.index } });
+            setLoading(false);
             props.setList(prev => res.data.list);
         } else {
             props.setList(prev => response.data.list);

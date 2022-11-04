@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from '../api/axios'
@@ -9,8 +10,10 @@ import usePlay from '../hooks/usePlay';
 import heroImage from '../assets/herobanner.svg';
 import { JournalCheck } from 'react-bootstrap-icons';
 import YupPassword from 'yup-password';
+import SettingsContext from '../context/SettingsProvider';
 
 function RegisterPage() {
+    const { setLoading } = useContext(SettingsContext);
     YupPassword(Yup);
     const playError = usePlay("error");
     const playSuccess = usePlay("success");
@@ -55,7 +58,9 @@ function RegisterPage() {
         }),
         onSubmit: async function (values, { resetForm }) {
             values.fullName = values.fullName.split(" ").map(e => e[0].toUpperCase().concat(e.slice(1, e.length))).join(" ");
+            setLoading(true);
             const response = await axios.post("/register", values);
+            setLoading(false);
             if (response.data.response === true) {
                 toast.success('Successfully Registered!', {
                     position: "top-right",

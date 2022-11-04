@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import useRefreshToken from '../hooks/useRefreshToken';
 import axios from '../api/axios';
@@ -8,8 +8,10 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import usePlay from '../hooks/usePlay';
 import { Check2Square, XLg, ThreeDotsVertical } from 'react-bootstrap-icons';
 import Swal from 'sweetalert2';
+import SettingsContext from '../context/SettingsProvider';
 
 function ListTask(props) {
+  const { setLoading } = useContext(SettingsContext);
   const refresh = useRefreshToken();
   const { auth, setAuth } = useAuth();
   const playCheck = usePlay("check");
@@ -17,9 +19,13 @@ function ListTask(props) {
   const [open, setOpen] = useState(false);
 
   async function deleteTask() {
+    setLoading(true);
     const response = await axios.delete('/deleteTaskFromList', { headers: { Authorization: `Bearer ${auth.accessToken}` }, data: { listIndex: props.listIndex, taskIndex: props.index } });
+    setLoading(false);
     if (response.data.auth === "Invalid token") {
+      setLoading(true);
       const accessToken = await refresh();
+      setLoading(false);
       if (accessToken === "expired") {
         Swal.fire({
           icon: 'error',
@@ -32,7 +38,9 @@ function ListTask(props) {
         }, 3000)
         return false;
       }
+      setLoading(true);
       const res = await axios.delete('/deleteTaskFromList', { headers: { Authorization: `Bearer ${accessToken}` }, data: { listIndex: props.listIndex, taskIndex: props.index } });
+      setLoading(false);
       props.setTaskList(prev => res.data.task);
     } else {
       props.setTaskList(prev => response.data.task);
@@ -47,9 +55,13 @@ function ListTask(props) {
   }
 
   async function setComplete() {
+    setLoading(true);
     const response = await axios.patch('/setTaskComplete', { listIndex: props.listIndex, taskIndex: props.index }, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
+    setLoading(false);
     if (response.data.auth === "Invalid token") {
+      setLoading(true);
       const accessToken = await refresh();
+      setLoading(false);
       if (accessToken === "expired") {
         Swal.fire({
           icon: 'error',
@@ -62,7 +74,9 @@ function ListTask(props) {
         }, 3000)
         return false;
       }
+      setLoading(true);
       const res = await axios.patch('/setTaskComplete', { listIndex: props.listIndex, taskIndex: props.index }, { headers: { Authorization: `Bearer ${accessToken}` } });
+      setLoading(false);
       props.setTaskList(prev => res.data.task);
     } else {
       props.setTaskList(prev => response.data.task);
