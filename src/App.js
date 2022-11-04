@@ -23,7 +23,9 @@ function App() {
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const isLoggedIn = await refresh();
+      setLoading(false);
       if (isLoggedIn === "expired") {
         Swal.fire({
           icon: 'error',

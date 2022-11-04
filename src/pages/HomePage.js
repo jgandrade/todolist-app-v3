@@ -144,7 +144,7 @@ function HomePage() {
                     </div>
                 </div>
 
-                <div className="container col-md-9 d-flex flex-wrap gap-3 justify-content-center align-items-start mt-5 mb-5">
+                <div className="container col-md-9 d-flex flex-wrap gap-3 justify-content-center align-items-start mb-5 mt-md-5 mt-2">
                     {
                         list.length > 0
                             ?
