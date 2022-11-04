@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import useRefreshToken from '../hooks/useRefreshToken';
 import useAuth from '../hooks/useAuth';
 import usePlay from '../hooks/usePlay';
+import { BoxArrowRight, JournalCheck, PersonCircle } from 'react-bootstrap-icons';
 
 function HomePage() {
     const [list, setLists] = useState([]);
@@ -87,14 +88,25 @@ function HomePage() {
 
     }, []);
 
-    function logout() {
-        axios.get("/logout", { withCredentials: true });
-        setAuth({});
-        navigate("/");
+    async function logout() {
+        await axios.get("/logout", { withCredentials: true });
+
+        toast.success('Successfully Logged Out!', {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+        });
+
+        playSuccess();
+
+        setTimeout(() => {
+            setAuth({});
+            navigate("/");
+        }, 2000)
     }
 
     return (
-        <div className="container">
+        <>
             <ToastContainer
                 position="top-right"
                 hideProgressBar={false}
@@ -102,30 +114,40 @@ function HomePage() {
                 rtl={false}
                 theme="light"
             />
-            <Button variant="outline-danger" className='mt-2' onClick={logout}>Logout</Button>
-            <form onSubmit={formik.handleSubmit}>
-                <TextInput
-                    label="Add List:"
-                    placeholder="Enter task for this list here"
-                    type="text"
-                    name="listName"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values.listName}
-                />
-                <Button variant="primary" className='mt-2' type="submit">Add To List</Button>
-            </form>
-            <div className="container d-flex flex-wrap gap-3 justify-content-center align-items-start">
-                {
-                    list.length > 0
-                        ?
-                        list.map((e, i) => <ListCard key={i} {...e} index={i} setList={setLists} />)
-                        :
-                        <p>You have nothing on your list as of this moment.</p>
-                }
-            </div>
+            <div className="d-flex flex-column flex-md-row">
+                <div className='col-md-3 md-shadow container'>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <h3 className='text-dark mt-3'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h3>
+                        <Button variant="outline-danger" className='mt-2 px-1' onClick={logout}><BoxArrowRight /> Logout</Button>
+                    </div>
+                    <div className="mt-5">
+                        <h6><PersonCircle /> Welcome {auth.auth.userName}!</h6>
+                        <form onSubmit={formik.handleSubmit} className="mt-3" >
+                            <p className='fw-bold'>Add List:</p>
+                            <TextInput
+                                placeholder="Enter List name here"
+                                type="text"
+                                name="listName"
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                value={formik.values.listName}
+                            />
+                            <Button variant="warning" className='mt-2' type="submit">Add To List</Button>
+                        </form>
+                    </div>
+                </div>
 
-        </div>
+                <div className="container col-md-9 d-flex flex-wrap gap-3 justify-content-center align-items-start mt-5 mb-5">
+                    {
+                        list.length > 0
+                            ?
+                            list.map((e, i) => <ListCard key={i} {...e} index={i} setList={setLists} />)
+                            :
+                            <p>You have nothing on your list as of this moment.</p>
+                    }
+                </div>
+            </div>
+        </>
     )
 }
 

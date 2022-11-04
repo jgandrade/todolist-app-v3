@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App" style={{ height: "100vh" }}>
+    <div className="App">
       <Suspense fallback={loader}>
         <Routes>
           {/* PUBLIC ROUTES */}

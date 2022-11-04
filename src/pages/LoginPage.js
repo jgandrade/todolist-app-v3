@@ -59,7 +59,7 @@ function LoginPage() {
   });
 
   return (
-    <div className='d-flex container text-center justify-content-center align-items-center h-100'>
+    <div className='d-flex container text-center justify-content-center align-items-center' style={{ height: "100vh" }}>
       <div id="login-page" className='container col-md-5 text-center p-5 shadow h-75 border rounded d-flex flex-column justify-content-center'>
         <ToastContainer
           position="top-right"
