@@ -228,7 +228,7 @@ function ListCard(props) {
                         animate="visible"
                         exit="exit"
                     >
-                        <Card style={{ width: '18rem' }} className="mt-1 mb-1 bg-warning bg-gradient shadow border">
+                        <Card style={{ width: '18rem' }} className="mb-1 bg-warning bg-gradient shadow border">
                             <Card.Body>
                                 <Card.Title className="d-flex align-items-center justify-content-between">
                                     <h4>{props.listName}</h4>
