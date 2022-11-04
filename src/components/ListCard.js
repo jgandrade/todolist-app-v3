@@ -214,7 +214,7 @@ function ListCard(props) {
                                         onChange={handleChange}
                                         value={task.task}
                                     />
-                                    <Button variant="outline-primary" type="submit">
+                                    <Button variant="success" className="rounded-circle py-2" type="submit">
                                         <PlusLg className='mb-1' />
                                     </Button>
                                 </form>

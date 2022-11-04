@@ -115,10 +115,10 @@ function HomePage() {
                 theme="light"
             />
             <div className="d-flex flex-column flex-md-row">
-                <div className='col-md-3 md-shadow container'>
+                <div className='col-md-3 container bg-dark text-light'>
                     <div className='d-flex justify-content-between align-items-center'>
-                        <h3 className='text-dark mt-3'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h3>
-                        <Button variant="outline-danger" className='mt-2 px-1' onClick={logout}><BoxArrowRight /> Logout</Button>
+                        <h3 className='text-light mt-3 fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h3>
+                        <Button variant="danger" className='fw-bold mt-2 px-1 text-light' onClick={logout}><BoxArrowRight /> Logout</Button>
                     </div>
                     <div className="mt-5">
                         <h6><PersonCircle /> Welcome {auth.auth.userName}!</h6>

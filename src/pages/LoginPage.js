@@ -68,7 +68,9 @@ function LoginPage() {
           rtl={false}
           theme="light"
         />
-        <h2><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList Login</h2>
+        <h2 className='fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h2>
+        <h4 className='fw-bold my-3'>Login</h4>
+
         <form onSubmit={formik.handleSubmit}>
           <TextInput
             label="Username"
@@ -96,7 +98,7 @@ function LoginPage() {
       <div className='col-md-7 d-none d-md-block flex-column align-content-center text-center'>
         <div>
           <img src={heroImage} className="w-50" alt="TodoTask Banner" />
-          <h2 className='text-dark mt-3'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h2>
+          <h2 className='text-dark mt-3 fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h2>
           <p className="text-secondary">A simple todo list app, to make your day organized</p>
         </div>
       </div>

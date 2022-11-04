@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useRefreshToken from "./hooks/useRefreshToken";
 import RegisterPage from './pages/RegisterPage';
+import Footer from './components/Footer';
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Route path="*" element={<MissingPage />} />
         </Routes>
       </Suspense>
+      <Footer />
     </div>
   );
 }
