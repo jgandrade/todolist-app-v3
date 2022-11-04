@@ -21,9 +21,12 @@ function LoginPage() {
       userName: Yup.string()
         .max(25, "Must be 25 characters or less")
         .min(6, "Must be 6 characters or more")
-        .required("Required"),
+        .trim('Input cannot include leading and trailing spaces')
+        .required("Required")
+        .strict(true),
       password: Yup.string()
         .required("Required")
+        .strict(true)
     }),
     onSubmit: async function (values, { resetForm }) {
       const response = await axios.post("/login", values, { withCredentials: true });
