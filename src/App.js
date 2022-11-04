@@ -41,7 +41,7 @@ function App() {
   return (
     <div className="App">
       <SettingsProvider value={{ loading, setLoading }}>
-        <div className="position-absolute bottom-50 end-50">
+        <div className="position-fixed bottom-50 end-50">
           <FadeLoader
             color={"#dee333"}
             loading={loading}
