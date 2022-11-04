@@ -40,7 +40,7 @@ function LoginPage() {
           autoClose: 1000,
           hideProgressBar: false,
         });
-
+        
         resetForm({ values: '' });
         playSuccess();
         return setTimeout(() => {
@@ -48,6 +48,7 @@ function LoginPage() {
           navigate("/home")
         }, 2000);
       } else {
+        console.log(response.data);
         playError();
         return toast.error('There was an error see errors below form.', {
           position: "top-right",
