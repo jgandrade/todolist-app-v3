@@ -59,7 +59,7 @@ function LoginPage() {
   });
 
   return (
-    <div className='d-flex container text-center justify-content-center align-items-center' style={{ height: "100vh" }}>
+    <div className='d-flex container text-center justify-content-center align-items-center' style={{ height: "80vh" }}>
       <ToastContainer
         position="top-right"
         hideProgressBar={false}

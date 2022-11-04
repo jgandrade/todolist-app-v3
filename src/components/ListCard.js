@@ -10,9 +10,10 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { toast } from 'react-toastify';
 import usePlay from '../hooks/usePlay';
 import { Trash3, PlusLg } from 'react-bootstrap-icons';
+import Swal from 'sweetalert2';
 
 function ListCard(props) {
-    const { auth } = useAuth();
+    const { auth, setAuth } = useAuth();
     const [taskList, setTaskList] = useState(props.tasks);
     const refresh = useRefreshToken();
     const [task, setTask] = useState({
@@ -38,6 +39,18 @@ function ListCard(props) {
             const response = await axios.post("/addTaskToList", { listIndex: props.index, taskContent: task.task }, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
             if (response.data.auth === "Invalid token") {
                 const accessToken = await refresh();
+                if (accessToken === "expired") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Your session has expired!',
+                        footer: 'You will be redirected to login page within 5 seconds'
+                    });
+                    setTimeout(() => {
+                        setAuth({})
+                    }, 3000)
+                    return false;
+                }
                 const res = await axios.post("/addTaskToList",
                     { listName: props.listName, taskContent: task.task },
                     {
@@ -75,7 +88,21 @@ function ListCard(props) {
     async function deleteList() {
         const response = await axios.delete('/deleteList', { headers: { Authorization: `Bearer ${auth.accessToken}` }, data: { listIndex: props.index } });
         if (response.data.auth === "Invalid token") {
+
             const accessToken = await refresh();
+            if (accessToken === "expired") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Your session has expired!',
+                    footer: 'You will be redirected to login page within 5 seconds'
+                });
+                setTimeout(() => {
+                    setAuth({})
+                }, 3000)
+                return false;
+            }
+
             const res = await axios.delete('/deleteList', { headers: { Authorization: `Bearer ${accessToken}` }, data: { listIndex: props.index } });
             props.setList(prev => res.data.list);
         } else {

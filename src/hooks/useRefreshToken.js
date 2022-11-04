@@ -6,17 +6,19 @@ const useRefreshToken = () => {
 
     const refresh = async () => {
         const response = await axios.get('/getAccessToken', { withCredentials: true });
-        if (response.data.response === false) {
-            axios.get("/logout", { withCredentials: true });
-            setAuth({});
-        } else {
+        if (response.data.message === "Token expired") {
+            await axios.get("/logout", { withCredentials: true });
+            return "expired";
+        }
+
+        if (response.data.accessToken !== undefined) {
             setAuth(prev => {
                 return { ...prev, accessToken: response.data.accessToken, auth: response.data.auth }
             });
             return response.data.accessToken;
         }
 
-        return response.data.response;
+        return "no cookie";
     }
 
     return refresh;

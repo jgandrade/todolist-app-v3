@@ -7,10 +7,11 @@ import { toast } from 'react-toastify';
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import usePlay from '../hooks/usePlay';
 import { Check2Square, XLg, ThreeDotsVertical } from 'react-bootstrap-icons';
+import Swal from 'sweetalert2';
 
 function ListTask(props) {
   const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const playCheck = usePlay("check");
   const playDelete = usePlay("delete");
   const [open, setOpen] = useState(false);
@@ -19,6 +20,18 @@ function ListTask(props) {
     const response = await axios.delete('/deleteTaskFromList', { headers: { Authorization: `Bearer ${auth.accessToken}` }, data: { listIndex: props.listIndex, taskIndex: props.index } });
     if (response.data.auth === "Invalid token") {
       const accessToken = await refresh();
+      if (accessToken === "expired") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Your session has expired!',
+          footer: 'You will be redirected to login page within 5 seconds'
+        });
+        setTimeout(() => {
+          setAuth({})
+        }, 3000)
+        return false;
+      }
       const res = await axios.delete('/deleteTaskFromList', { headers: { Authorization: `Bearer ${accessToken}` }, data: { listIndex: props.listIndex, taskIndex: props.index } });
       props.setTaskList(prev => res.data.task);
     } else {
@@ -37,6 +50,18 @@ function ListTask(props) {
     const response = await axios.patch('/setTaskComplete', { listIndex: props.listIndex, taskIndex: props.index }, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
     if (response.data.auth === "Invalid token") {
       const accessToken = await refresh();
+      if (accessToken === "expired") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Your session has expired!',
+          footer: 'You will be redirected to login page within 5 seconds'
+        });
+        setTimeout(() => {
+          setAuth({})
+        }, 3000)
+        return false;
+      }
       const res = await axios.patch('/setTaskComplete', { listIndex: props.listIndex, taskIndex: props.index }, { headers: { Authorization: `Bearer ${accessToken}` } });
       props.setTaskList(prev => res.data.task);
     } else {

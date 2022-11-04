@@ -10,6 +10,7 @@ import useRefreshToken from '../hooks/useRefreshToken';
 import useAuth from '../hooks/useAuth';
 import usePlay from '../hooks/usePlay';
 import { BoxArrowRight, JournalCheck, PersonCircle } from 'react-bootstrap-icons';
+import Swal from 'sweetalert2';
 
 function HomePage() {
     const [list, setLists] = useState([]);
@@ -21,14 +22,6 @@ function HomePage() {
 
     const getList = async () => {
         const response = await axios.get("/getLists", { headers: { Authorization: `Bearer ${auth.accessToken}` } });
-
-        if (response.data.response === false) {
-            const accessToken = await refresh();
-            const res = await axios.get("/getLists", { headers: { Authorization: `Bearer ${accessToken}` } });
-            setLists(res.data.lists);
-            return res.data.lists;
-        }
-
         setLists(response.data.lists);
         return response.data.lists;
     }
@@ -48,6 +41,20 @@ function HomePage() {
 
                 if (response.data.auth === "Invalid token") {
                     const accessToken = await refresh();
+
+                    if (accessToken === "expired") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Your session has expired!',
+                            footer: 'You will be redirected to login page within 5 seconds'
+                        });
+                        setTimeout(() => {
+                            setAuth({})
+                        }, 3000)
+                        return false;
+                    }
+
                     const res = await axios.post("/addList",
                         values,
                         {
@@ -82,10 +89,8 @@ function HomePage() {
 
     useEffect(() => {
         (async () => {
-            await refresh();
             await getList();
         })();
-
     }, []);
 
     async function logout() {

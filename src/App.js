@@ -10,9 +10,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import useRefreshToken from "./hooks/useRefreshToken";
 import RegisterPage from './pages/RegisterPage';
 import Footer from './components/Footer';
+import useAuth from './hooks/useAuth';
+import Swal from 'sweetalert2';
 
 function App() {
-
+  const { setAuth } = useAuth();
   const loader = (
     <div
       className="position-fixed w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-light"
@@ -26,7 +28,16 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      await refresh();
+      const isLoggedIn = await refresh();
+      if (isLoggedIn === "expired") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Your session has expired!',
+          footer: 'You are directed here in the login page.'
+        });
+        setAuth({});
+      }
     })();
   }, []);
 
