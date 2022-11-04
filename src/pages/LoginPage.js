@@ -54,7 +54,7 @@ function LoginPage() {
         }, 2000);
       } else {
         playError();
-        return toast.error('There was an error see errors below form.', {
+        return toast.error('Your password is incorrect or your email/username does not exist.', {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
