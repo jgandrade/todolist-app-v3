@@ -19,9 +19,12 @@ const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const Footer = lazy(() => import('./components/Footer'));
 
 function App() {
-
   const loader = (
-    <img className='position-absolute bottom-50 end-50' style={{ zIndex: 1000 }} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
+    <>
+      <div className='w-100 h-100' style={{ zIndex: 9999 }}>
+        <img className='position-absolute bottom-50 end-50' style={{ zIndex: 1000 }} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
+      </div>
+    </>
   )
   const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);

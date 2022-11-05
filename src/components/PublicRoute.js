@@ -9,11 +9,15 @@ function PublicRoute() {
     const location = useLocation();
 
     const loader = (
-        <img className='position-absolute bottom-50 end-50' style={{ zIndex: 1000 }} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
+        <>
+            <div className='w-100 h-100' style={{ zIndex: 9999 }}>
+                <img className='position-absolute bottom-50 end-50' style={{ zIndex: 1000 }} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
+            </div>
+        </>
     )
 
     if (loading) return loader
-    
+
     return (
         auth?.auth === undefined
             ?
