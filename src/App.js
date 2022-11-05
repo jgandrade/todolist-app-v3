@@ -23,8 +23,6 @@ function App() {
   const loader = (
     <img className='position-absolute bottom-50 end-50' style={{ zIndex: 1000 }} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
   )
-
-
   const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
 
