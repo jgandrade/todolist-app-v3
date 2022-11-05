@@ -1,21 +1,29 @@
-import { useEffect, useState } from 'react';
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import MissingPage from "./pages/MissingPage";
-import RequireAuth from "./components/RequireAuth";
-import PublicRoute from "./components/PublicRoute";
+import { useEffect, useState, Suspense, lazy } from 'react';
+import useRefreshToken from "./hooks/useRefreshToken";
+import useAuth from './hooks/useAuth';
+
 import { Routes, Route } from 'react-router-dom';
+import { FadeLoader } from "react-spinners";
+import Swal from 'sweetalert2';
+
 import "react-toastify/dist/ReactToastify.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import useRefreshToken from "./hooks/useRefreshToken";
-import RegisterPage from './pages/RegisterPage';
-import Footer from './components/Footer';
-import useAuth from './hooks/useAuth';
-import Swal from 'sweetalert2';
 import { SettingsProvider } from './context/SettingsProvider';
-import { FadeLoader } from "react-spinners";
+import RequireAuth from "./components/RequireAuth";
+import PublicRoute from "./components/PublicRoute";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const MissingPage = lazy(() => import("./pages/MissingPage"));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const Footer = lazy(() => import('./components/Footer'));
 
 function App() {
+
+  const loader = () => {
+    return <img className='position-absolute bottom-50 end-50' srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
+  }
+
   const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -42,30 +50,34 @@ function App() {
 
   return (
     <div className="App">
-      <SettingsProvider value={{ loading, setLoading }}>
-        <div className="position-fixed bottom-50 end-50" style={{ zIndex: 1000 }}>
-          <FadeLoader
-            color={"#dee333"}
-            loading={loading}
-            size={100}
-          />
-        </div>
-        <Routes>
-          {/* PUBLIC ROUTES */}
-          <Route element={<PublicRoute />}>
-            <Route exact element={<LoginPage />} path="/" />
-            <Route exact element={<RegisterPage />} path="/register" />
-          </Route>
+      <Suspense fallback={loader} >
+        <SettingsProvider value={{ loading, setLoading }}>
+          <div className="position-fixed bottom-50 end-50" style={{ zIndex: 1000 }}>
+            <FadeLoader
+              color={"#dee333"}
+              loading={loading}
+              size={100}
+            />
+          </div>
+          <div>
+            <Routes>
+              {/* PRIVATE ROUTES */}
+              <Route element={<RequireAuth />}>
+                <Route exact path="/home" element={<HomePage />} />
+              </Route>
 
-          {/* PRIVATE ROUTES */}
-          <Route element={<RequireAuth />}>
-            <Route exact path="/home" element={<HomePage />} />
-          </Route>
+              {/* PUBLIC ROUTES */}
+              <Route element={<PublicRoute />}>
+                <Route exact element={<LoginPage />} path="/" />
+                <Route exact element={<RegisterPage />} path="/register" />
+              </Route>
 
-          <Route path="*" element={<MissingPage />} />
-        </Routes>
-        <Footer />
-      </SettingsProvider>
+              <Route path="*" element={<MissingPage />} />
+            </Routes>
+          </div>
+          <Footer />
+        </SettingsProvider>
+      </Suspense>
     </div>
   );
 }

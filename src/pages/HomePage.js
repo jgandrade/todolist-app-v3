@@ -123,8 +123,8 @@ function HomePage() {
                 rtl={false}
                 theme="light"
             />
-            <div className="d-flex flex-column flex-md-row" style={{ height: "100%" }}>
-                <div className='col-md-3 container' style={{ height: "80vh" }}>
+            <div className="d-flex flex-column flex-md-row">
+                <div className='col-md-3 container'>
                     <div className='d-flex justify-content-between align-items-center'>
                         <h3 className='mt-3 fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h3>
                         <Button variant="danger" className='fw-bold mt-2 px-1 text-light' onClick={logout}><BoxArrowRight /> Logout</Button>
@@ -146,7 +146,7 @@ function HomePage() {
                     </div>
                 </div>
 
-                <div className="container col-md-9 d-flex flex-wrap gap-3 justify-content-center align-items-start mb-5 mt-md-5">
+                <div className="container col-md-9 d-flex flex-wrap gap-3 justify-content-center align-items-start mb-5 mt-md-5 mt-4">
                     {
                         list.length > 0
                             ?
