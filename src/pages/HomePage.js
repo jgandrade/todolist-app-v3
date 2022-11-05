@@ -130,7 +130,7 @@ function HomePage() {
                         <Button variant="danger" className='fw-bold mt-2 px-1 text-light' onClick={logout}><BoxArrowRight /> Logout</Button>
                     </div>
                     <div className="mt-5">
-                        <h6><PersonCircle /> Welcome {auth.auth.fullName}!</h6>
+                        <h6><PersonCircle /> Welcome {auth.auth.userName}!</h6>
                         <form onSubmit={formik.handleSubmit} className="mt-3" >
                             <p className='fw-bold'>Add List:</p>
                             <TextInput
