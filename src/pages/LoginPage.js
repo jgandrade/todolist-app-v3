@@ -60,6 +60,7 @@ function LoginPage() {
           hideProgressBar: false,
         });
       }
+
     }
   });
 
@@ -91,7 +92,16 @@ function LoginPage() {
             onBlur={formik.handleBlur}
           />
           {formik.touched.password && formik.errors.password ? <p className='text-danger' style={{ fontSize: "0.8em" }}>{formik.errors.password}</p> : <></>}
-          <Button type='submit' className='mt-3 fw-bold px-4' variant="outline-dark">Login</Button>
+          <Button type='submit' className='mt-3 fw-bold px-4' variant="outline-dark"
+            disabled={
+              formik.values.password.length === 0 || formik.values.input.length === 0
+                ?
+                true
+                :
+                false
+            }>
+            Login
+          </Button>
           <div className="mt-5">
             <p className='text-secondary' style={{ fontSize: "0.8em" }}>No Acccount Yet?</p>
             <Link to="/register" style={{ fontSize: "0.8em" }}>Click here to Register</Link>

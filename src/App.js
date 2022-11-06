@@ -65,7 +65,7 @@ function App() {
             theme="light"
             style={{ zIndex: 3000 }}
           />
-          <div className="position-fixed bottom-50 end-50" style={{ zIndex: 1000 }}>
+          <div className="position-absolute" style={{ zIndex: 1000, left: 0, top: 0, transform: "translate(-50%,-50%)" }}>
             <FadeLoader
               color={"#333333"}
               loading={loading}

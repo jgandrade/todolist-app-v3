@@ -141,7 +141,18 @@ function RegisterPage() {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.password && formik.errors.password ? <p className='text-danger' style={{ fontSize: "0.8em" }}>{formik.errors.password}</p> : <></>}
-                    <Button type='submit' className='mt-3 fw-bold px-4' variant="outline-dark">Register</Button>
+                    <Button type='submit' className='mt-3 fw-bold px-4' variant="outline-dark"
+                        disabled={
+                            formik.values.emailAddress.length === 0 ||
+                                formik.values.fullName.length === 0 ||
+                                formik.values.password.length === 0 ||
+                                formik.values.userName.length === 0
+                                ?
+                                true
+                                :
+                                false
+                        }
+                    >Register</Button>
                     <div className="mt-5">
                         <p className='text-secondary' style={{ fontSize: "0.8em" }}>Have an account?</p>
                         <Link to="/" style={{ fontSize: "0.8em" }}>Click here to Log in</Link>

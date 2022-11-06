@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import SettingsContext from '../context/SettingsProvider';
 
 function ListTask(props) {
+  const [clickedDelete, setClickedDelete] = useState(false);
+  const [clickedComplete, setClickedComplete] = useState(false);
   const { setLoading } = useContext(SettingsContext);
   const refresh = useRefreshToken();
   const { auth, setAuth } = useAuth();
@@ -19,6 +21,7 @@ function ListTask(props) {
   const [open, setOpen] = useState(false);
 
   async function deleteTask() {
+    setClickedDelete(true);
     setLoading(true);
     const response = await axios.delete('/deleteTaskFromList', { headers: { Authorization: `Bearer ${auth.accessToken}` }, data: { listIndex: props.listIndex, taskIndex: props.index } });
     setLoading(false);
@@ -39,11 +42,19 @@ function ListTask(props) {
         return false;
       }
       setLoading(true);
-      const res = await axios.delete('/deleteTaskFromList', { headers: { Authorization: `Bearer ${accessToken}` }, data: { listIndex: props.listIndex, taskIndex: props.index } });
+      await axios.delete('/deleteTaskFromList', { headers: { Authorization: `Bearer ${accessToken}` }, data: { listIndex: props.listIndex, taskIndex: props.index } });
       setLoading(false);
-      props.setTaskList(prev => res.data.task);
+      props.setList(prev => {
+        prev[props.listIndex].tasks.splice(props.index, 1);
+        return prev;
+      });
+      setClickedDelete(false);
     } else {
-      props.setTaskList(prev => response.data.task);
+      props.setList(prev => {
+        prev[props.listIndex].tasks.splice(props.index, 1);
+        return prev;
+      });
+      setClickedDelete(false);
     }
     toast.success('Task Removed!', {
       position: "top-right",
@@ -55,6 +66,7 @@ function ListTask(props) {
   }
 
   async function setComplete() {
+    setClickedComplete(true);
     setLoading(true);
     const response = await axios.patch('/setTaskComplete', { listIndex: props.listIndex, taskIndex: props.index }, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
     setLoading(false);
@@ -75,11 +87,19 @@ function ListTask(props) {
         return false;
       }
       setLoading(true);
-      const res = await axios.patch('/setTaskComplete', { listIndex: props.listIndex, taskIndex: props.index }, { headers: { Authorization: `Bearer ${accessToken}` } });
+      await axios.patch('/setTaskComplete', { listIndex: props.listIndex, taskIndex: props.index }, { headers: { Authorization: `Bearer ${accessToken}` } });
       setLoading(false);
-      props.setTaskList(prev => res.data.task);
+      props.setList(prev => {
+        prev[props.listIndex].tasks[props.index].isCompleted = !prev[props.listIndex].tasks[props.index].isCompleted;
+        return prev;
+      });
+      setClickedComplete(false);
     } else {
-      props.setTaskList(prev => response.data.task);
+      props.setList(prev => {
+        prev[props.listIndex].tasks[props.index].isCompleted = !prev[props.listIndex].tasks[props.index].isCompleted;
+        return prev;
+      });
+      setClickedComplete(false);
     }
 
     toast.success('Task Toggled Complete State!', {
@@ -91,8 +111,6 @@ function ListTask(props) {
     setOpen(false);
     playCheck();
   }
-
-
 
   function showOptions() {
     setOpen(!open);
@@ -134,8 +152,8 @@ function ListTask(props) {
                 open
                   ?
                   <>
-                    <Button variant="outline-danger" onClick={deleteTask} className='mt-2 rounded-circle py-0 px-1'><XLg className="mb-1" /></Button>
-                    <Button variant={props.isCompleted ? "outline-success" : "outline-secondary"} onClick={setComplete} className='mt-2 rounded-circle py-0 px-1'><Check2Square className="mb-1 h5" /></Button>
+                    <Button variant="outline-danger" onClick={deleteTask} className='mt-2 rounded-circle py-0 px-1' disabled={clickedDelete}><XLg className="mb-1" /></Button>
+                    <Button variant={props.isCompleted ? "outline-success" : "outline-secondary"} onClick={setComplete} className='mt-2 rounded-circle py-0 px-1' disabled={clickedComplete}><Check2Square className="mb-1 h5" /></Button>
                   </>
                   :
                   <></>

@@ -21,13 +21,15 @@ function HomePage() {
     const { auth, setAuth } = useAuth();
     const playSuccess = usePlay("success");
     const playError = usePlay("error");
-
+    const [clickedLogOut, setClickedLogOut] = useState(false);
+    const [clickedAddList, setClickedAddList] = useState(false);
     const formik = useFormik({
         initialValues: {
             listName: "",
         },
         onSubmit: async function (values, { resetForm }) {
             if (values.listName !== null && values.listName.trim() !== "") {
+                setClickedAddList(true);
                 setLoading(true);
                 const response = await axios.post("/addList",
                     values,
@@ -60,8 +62,10 @@ function HomePage() {
                         }
                     )
                     setLists(prev => [...prev, res.data.list]);
+                    setClickedAddList(false);
                 } else {
                     setLists(prev => [...prev, response.data.list]);
+                    setClickedAddList(false);
                 }
 
                 toast.success('List Added!', {
@@ -95,7 +99,17 @@ function HomePage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    function displayList() {
+        console.log("LIST RENDERED", list);
+        if (list.length > 0) {
+            return list.map((e, i) => <ListCard key={i} {...e} index={i} setList={setLists} />)
+        } else {
+            return <p>You have nothing on your list as of this moment.</p>
+        }
+    }
+
     async function logout() {
+        setClickedLogOut(true);
         setLoading(true);
         await axios.get("/logout", { withCredentials: true });
         setLoading(false);
@@ -120,7 +134,7 @@ function HomePage() {
                 <div className='col-md-3 container'>
                     <div className='d-flex justify-content-between align-items-center'>
                         <h3 className='mt-3 fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h3>
-                        <Button variant="danger" className='fw-bold mt-2 px-1 text-light' onClick={logout}><BoxArrowRight /> Logout</Button>
+                        <Button variant="danger" className='fw-bold mt-2 px-1 text-light' onClick={logout} disabled={clickedLogOut}><BoxArrowRight /> Logout</Button>
                     </div>
                     <div className="mt-5">
                         <h6><PersonCircle /> Welcome {auth.auth.userName}!</h6>
@@ -134,18 +148,14 @@ function HomePage() {
                                 onChange={formik.handleChange}
                                 value={formik.values.listName}
                             />
-                            <Button variant="warning" className='mt-2' type="submit">Add To List</Button>
+                            <Button variant="warning" className='mt-2' type="submit" disabled={clickedAddList}>Add To List</Button>
                         </form>
                     </div>
                 </div>
 
                 <div className="container col-md-9 d-flex flex-wrap gap-3 justify-content-center align-items-start mb-5 mt-md-5 mt-4">
                     {
-                        list.length > 0
-                            ?
-                            list.map((e, i) => <ListCard key={i} {...e} index={i} setList={setLists} />)
-                            :
-                            <p>You have nothing on your list as of this moment.</p>
+                        displayList()
                     }
                 </div>
             </div>
