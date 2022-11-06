@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { SettingsProvider } from './context/SettingsProvider';
 import RequireAuth from "./components/RequireAuth";
 import PublicRoute from "./components/PublicRoute";
+import { ToastContainer } from 'react-toastify';
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -21,13 +22,14 @@ const Footer = lazy(() => import('./components/Footer'));
 function App() {
   const loader = (
     <>
-      <div className="bg-light" style={{ zIndex: 999, height: "100vh", width: "100vw" }}>
-        <img className='position-absolute bottom-50 end-50' style={{ zIndex: 1000 }} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
+      <div className="position-relative d-flex justify-content-center align-items-center bg-light" style={{ height: "80vh", width: "100vw", zIndex: 2000 }}>
+        <img height={70} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
       </div>
     </>
   )
   const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
+
 
   const refresh = useRefreshToken();
 
@@ -36,6 +38,7 @@ function App() {
       setLoading(true);
       const isLoggedIn = await refresh();
       setLoading(false);
+
       if (isLoggedIn === "expired") {
         Swal.fire({
           icon: 'error',
@@ -54,9 +57,17 @@ function App() {
     <div className="App">
       <Suspense fallback={loader} >
         <SettingsProvider value={{ loading, setLoading }}>
+          <ToastContainer
+            position="top-right"
+            hideProgressBar={false}
+            newestOnTop={true}
+            rtl={false}
+            theme="light"
+            style={{ zIndex: 3000 }}
+          />
           <div className="position-fixed bottom-50 end-50" style={{ zIndex: 1000 }}>
             <FadeLoader
-              color={"#dee333"}
+              color={"#333333"}
               loading={loading}
               size={100}
             />

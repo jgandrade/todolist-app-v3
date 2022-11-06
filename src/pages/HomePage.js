@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { useFormik } from 'formik';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import ListCard from '../components/ListCard';
 import { TextInput } from '@mantine/core';
 import Button from 'react-bootstrap/Button';
@@ -116,13 +116,6 @@ function HomePage() {
 
     return (
         <>
-            <ToastContainer
-                position="top-right"
-                hideProgressBar={false}
-                newestOnTop={true}
-                rtl={false}
-                theme="light"
-            />
             <div className="d-flex flex-column flex-md-row">
                 <div className='col-md-3 container'>
                     <div className='d-flex justify-content-between align-items-center'>

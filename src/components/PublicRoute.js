@@ -10,8 +10,8 @@ function PublicRoute() {
 
     const loader = (
         <>
-            <div className="bg-light" style={{ zIndex: 999, height: "100vh", width: "100vw" }}>
-                <img className='position-absolute bottom-50 end-50' style={{ zIndex: 1000 }} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
+            <div className="position-relative d-flex justify-content-center align-items-center bg-light" style={{ height: "80vh", width: "100vw", zIndex: 2000 }}>
+                <img height={70} srcSet='https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif' alt="loading" />
             </div>
         </>
     )

@@ -1,8 +1,8 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from '../api/axios'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import { TextInput, PasswordInput } from '@mantine/core';
 import Button from 'react-bootstrap/Button';
@@ -65,13 +65,6 @@ function LoginPage() {
 
   return (
     <div className='d-flex container text-center justify-content-center align-items-center' style={{ height: "80vh" }}>
-      <ToastContainer
-        position="top-right"
-        hideProgressBar={false}
-        newestOnTop={true}
-        rtl={false}
-        theme="light"
-      />
       <div id="login-page" className='container col-md-5 text-center p-5 shadow h-80 border rounded d-flex flex-column justify-content-center'>
         <h2 className='fw-bolder'><JournalCheck className='mb-2' style={{ color: "ECC00F" }} /> TodoList</h2>
         <h4 className='fw-bold my-3'>Login</h4>

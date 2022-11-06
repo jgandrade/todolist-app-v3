@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from '../api/axios'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useNavigate, Link } from 'react-router-dom';
 import { TextInput, PasswordInput } from '@mantine/core';
 import Button from 'react-bootstrap/Button';
@@ -86,14 +86,6 @@ function RegisterPage() {
 
     return (
         <div className='d-flex container text-center justify-content-center align-items-center' style={{ height: "100vh" }}>
-            <ToastContainer
-                position="top-right"
-                hideProgressBar={false}
-                newestOnTop={true}
-                rtl={false}
-                theme="light"
-            />
-
             <div className='col-md-7 d-none d-md-block flex-column align-content-center text-center'>
                 <div>
                     <img src={heroImage} className="w-50" alt="TodoTask Banner" />
