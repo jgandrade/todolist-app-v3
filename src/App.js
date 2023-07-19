@@ -73,7 +73,7 @@ function App() {
               size={100}
             />
           </div>
-          <div className='min-vh-100'>
+          <div style={{minHeight: "100vh"}}>
             <Routes>
               {/* PRIVATE ROUTES */}
               <Route element={<RequireAuth />}>
